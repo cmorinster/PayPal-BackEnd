@@ -97,9 +97,9 @@ def poll_results():
 
 
 
-@api.route('/getresults/<int:event_id>')
+@api.route('/getresults/<int:event_id>/<string:share>')
 #@cross_origin
-def get_results(event_id):
+def get_results(event_id,share):
 
 
 
@@ -108,11 +108,29 @@ def get_results(event_id):
     # we having a page the admin and page the voters.  the page for the admin needs qds and qts, 
     #could be nice to have per person {questiondate, questionname, answers:{personA:answer}, {personB:answer}}
     #get all questions with eventID = blank. then get all answers to each question and get the corresponfing person 
+    answers_dict = {}
     question_dict = {}
     count = 0
-    questions = db.session.execute(db.select(Questions.questiondate, Questions.questiontime, PollAnswers).where(and_((Questions.event_id == event_id), Questions.id == PollAnswers.questions_id))).all()
-    print(questions)
-    return(jsonify(questions))
+    questions = db.session.execute(db.select(Questions.questiondate, Questions.questiontime, PollAnswers.answer, PollAnswers.invitees_id).where(and_((Questions.event_id == event_id), Questions.id == PollAnswers.questions_id))).all()
+    for question in questions:
+        row_dict = []
+        
+        if share == True:
+            inviteename = db.session.execute(db.select(Invitees.inviteename).where(Invitees.id == question[3])).first()
+            row_dict = [question[0], question[1], question[2], inviteename[0]]
+        else:
+            row_dict = [question[0], question[1]]
+        question_dict[count] = row_dict
+        count += 1
+    if share == True:
+        print(answers_dict)    
+        return((answers_dict))
+    else:
+        print(question_dict)    
+        return((question_dict))  
+
+    
+   
 
 # Get user info from token
 # @api.route('/me')
