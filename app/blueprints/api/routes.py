@@ -27,7 +27,7 @@ from sqlalchemy import desc
 
 # Create an event
 @api.route('/event', methods=['POST'])
-# @cross_origin
+#@cross_origin
 def create_event():
     data = request.json
     # Validate the data
@@ -41,17 +41,19 @@ def create_event():
             return jsonify({'error': f"You are missing the {field} field"}), 400
     new_event = Event(**data['event'])
     new_event_dict = new_event.to_dict()
+    print(new_event_dict['id'])
     # Grab the data from the request body
     count = 0 
    
     for question in data['questions']:
+        print(data['questions'][question])
         for fieldq in ['questiondate', 'questiontime']:
-            if fieldq not in question:
+            print('hi')
+            if fieldq not in data['questions'][question]:
                 return jsonify({'error': f"You are missing the {fieldq} field"}), 400
         count += 1
-        question['event_id'] = new_event_dict['id']
-        #i think we need a line here to query from the new_event
-        new_question = Questions(**question)
+        data['questions'][question]['event_id'] = new_event_dict['id']
+        new_question = Questions(**data['questions'][question])
         print(new_question.to_dict())
 
        
@@ -74,19 +76,22 @@ def create_event():
 @api.route('/pollresults', methods=['POST'])
 def poll_results():
     data = request.json
-    # data = {invitees:{id:, inviteename:, inviteeemail:, eventid:}, pollanswers:{question1{questions_id:, answer:, invitees_id}, question2 {questionsid:,  answer:, invitees_id}
+    # data = {invitees:{inviteename:, inviteeemail:, eventid:}, pollanswers:{question1{questions_id:, answer:, invitees_id}, question2 {questionsid:,  answer:, invitees_id}
     for field in ['inviteename', 'inviteeemail', 'event_id']:
         if field not in data['invitees']:
             return jsonify({'error': f"You are missing the {field} field"}), 400
     new_invitee = Invitees(**data['invitees'])
+    new_invitee_dict = new_invitee.to_dict()
     count = 0
     for answer in data['pollanswers']:
-        for fielda in ['answer', 'questions_id', 'invitees_id']:
-            if fielda not in answer:
+        for fielda in ['answer', 'questions_id']:
+            if fielda not in data['pollanswers'][answer]:
                 return jsonify({'error': f"You are missing the {fielda} field"}), 400
         count += 1
-        new_answer = PollAnswers(**answer)
-    return(jsonify(new_invitee.to_dict))
+        data['pollanswers'][answer]['invitees_id'] = new_invitee_dict['id']
+        new_answer = PollAnswers(**data['pollanswers'][answer])
+    
+    return "hello"
 
 
 

@@ -1,8 +1,8 @@
 """Initial migration.
 
-Revision ID: d968679ebe2c
+Revision ID: 66f56a772727
 Revises: 
-Create Date: 2023-10-12 16:10:18.547691
+Create Date: 2023-10-12 19:49:34.997765
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd968679ebe2c'
+revision = '66f56a772727'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,9 +27,7 @@ def upgrade():
     sa.Column('shareresults', sa.Boolean(), nullable=False),
     sa.Column('eventdate', sa.DateTime(), nullable=True),
     sa.Column('datecreated', sa.DateTime(), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('creatoremail'),
-    sa.UniqueConstraint('creatorname')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('invitees',
     sa.Column('id', sa.Integer(), nullable=False),

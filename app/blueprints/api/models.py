@@ -7,8 +7,8 @@ from app import db
 
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    creatorname = db.Column(db.String(150), nullable=False, unique=True)
-    creatoremail = db.Column(db.String(150), nullable=False, unique=True)
+    creatorname = db.Column(db.String(150), nullable=False)
+    creatoremail = db.Column(db.String(150), nullable=False)
     eventname = db.Column(db.String(150), nullable=False)
     polldescription = db.Column(db.String(500), nullable=True)
     shareresults = db.Column(db.Boolean, nullable=False, default=False)
@@ -91,9 +91,8 @@ class Invitees(db.Model):
     def to_dict(self):   
         return{
             'id': self.id,
-            'inviteename': self.name,
-            'inviteeemail': self.wins,
-            'event': Event.query.get(self.id).to_dict()
+            'inviteename': self.inviteename,
+            'inviteeemail': self.inviteeemail
         }
 
         
@@ -129,9 +128,9 @@ class Questions(db.Model):
     def to_dict(self):   
         return{
             'id': self.id,
-            'questiondate': self.name,
-            'questiontime': self.wins,
-            'poll': Event.query.get(self.id).to_dict()
+            'questiondate': self.questiondate,
+            'questiontime': self.questiontime
+        
         }
 
         
@@ -173,12 +172,7 @@ class PollAnswers(db.Model):
 
         
 
-    # def update(self, data):
-    #     for field in data:
-    #         if field not in {'id', 'type', 'strength', 'agility', 'intellegence', 'speed', 'endurance', 'camoflague', 'health', 'description', 'link', 'wins', 'champion' }:
-    #             continue
-    #         setattr(self, field, data[field])
-    #     db.session.commit()
+
 
     def delete(self):
         db.session.delete(self)
