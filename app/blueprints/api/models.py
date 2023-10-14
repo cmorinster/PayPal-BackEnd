@@ -1,7 +1,7 @@
 import os
 import base64
 from datetime import datetime, timedelta
-from app import db
+from main import db
 #from werkzeug.security import generate_password_hash, check_password_hash
 
 
