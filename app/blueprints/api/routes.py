@@ -1,7 +1,7 @@
 from flask import jsonify, request
 import requests
 import os 
-from main import db
+from app import db
 from flask_cors import CORS, cross_origin
 # import base64
 # import requests
